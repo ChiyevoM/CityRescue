@@ -2,6 +2,7 @@ package cityrescue;
 
 import cityrescue.enums.*;
 import cityrescue.exceptions.*;
+import cityrescue.model.*;
 
 /**
  * CityRescueImpl (Starter)
@@ -11,7 +12,26 @@ import cityrescue.exceptions.*;
  */
 public class CityRescueImpl implements CityRescue {
 
-    // TODO: add fields (map, arrays for stations/units/incidents, counters, tick, etc.)
+    // Map
+    private CityMap cityMap;
+    
+    // Storage limits
+    private static final int MAX_STATIONS = 20;
+    private static final int MAX_UNITS = 50;
+    private static final int MAX_INCIDENTS = 200;
+    
+    // Arrays
+    private Station[] stations;
+    private Unit[] units;
+    private Incident[] incidents;
+    
+    // Counters
+    private int stationCount;
+    private int unitCount;
+    private int incidentCount;
+    
+    // Tick counter
+    private int tick;
 
     @Override
     public void initialise(int width, int height) throws InvalidGridException {
