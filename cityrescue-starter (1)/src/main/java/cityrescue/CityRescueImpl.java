@@ -33,10 +33,25 @@ public class CityRescueImpl implements CityRescue {
     // Tick counter
     private int tick;
 
+    
     @Override
     public void initialise(int width, int height) throws InvalidGridException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+    
+        if (width <= 0 || height <= 0) {
+            throw new InvalidGridException("Invalid grid size");
+        }
+    
+        cityMap = new CityMap(width, height);
+    
+        stations = new Station[MAX_STATIONS];
+        units = new Unit[MAX_UNITS];
+        incidents = new Incident[MAX_INCIDENTS];
+    
+        stationCount = 0;
+        unitCount = 0;
+        incidentCount = 0;
+    
+        tick = 0;
     }
 
     @Override
