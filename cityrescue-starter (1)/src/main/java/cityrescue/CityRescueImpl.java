@@ -215,13 +215,22 @@ public class CityRescueImpl implements CityRescue {
         Unit unit = null;
     
         if (type == UnitType.AMBULANCE) {
-            unit = new Ambulance(unitCount, station);
+            unit = new Ambulance(unitCount, type,
+                    station.getX(),
+                    station.getY(),
+                    station.getStationId());
         }
         else if (type == UnitType.FIRE_ENGINE) {
-            unit = new FireEngine(unitCount, station);
+            unit = new FireEngine(unitCount, type,
+                    station.getX(),
+                    station.getY(),
+                    station.getStationId());
         }
         else if (type == UnitType.POLICE_CAR) {
-            unit = new PoliceCar(unitCount, station);
+            unit = new PoliceCar(unitCount, type,
+                    station.getX(),
+                    station.getY(),
+                    station.getStationId());
         }
     
         // 6. Store globally
@@ -234,7 +243,7 @@ public class CityRescueImpl implements CityRescue {
         unitCount++;
     
         // 9. Return ID
-        return unit.getId();
+        return unit.getUnitId();
     }
 
     @Override
@@ -262,20 +271,20 @@ public class CityRescueImpl implements CityRescue {
         int[] ids = new int[unitCount];
     
         for (int i = 0; i < unitCount; i++) {
-            ids[i] = units[i].getId();
+            ids[i] = units[i].getUnitId();
         }
     
         return ids;
     }
     
+
     @Override
     public String viewUnit(int unitId) throws IDNotRecognisedException {
     
         Unit unit = null;
     
-        // 1. Find unit
         for (int i = 0; i < unitCount; i++) {
-            if (units[i].getId() == unitId) {
+            if (units[i].getUnitId() == unitId) {
                 unit = units[i];
                 break;
             }
@@ -285,11 +294,11 @@ public class CityRescueImpl implements CityRescue {
             throw new IDNotRecognisedException("Unit ID not recognised");
         }
     
-        // 2. Build readable output
-        return "Unit ID: " + unit.getId() +
-               ", Type: " + unit.getType() +
-               ", Station: " + unit.getStation().getName() +
-               ", Out of Service: " + unit.isOutOfService();
+        return "Unit ID: " + unit.getUnitId()
+                + ", Type: " + unit.getType()
+                + ", Status: " + unit.getStatus()
+                + ", Location: (" + unit.getX() + "," + unit.getY() + ")"
+                + ", Home Station ID: " + unit.getHomeStationId();
     }
 
     @Override
