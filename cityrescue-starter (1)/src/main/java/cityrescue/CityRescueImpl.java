@@ -96,7 +96,7 @@ public class CityRescueImpl implements CityRescue {
             throw new IllegalStateException("Maximum stations reached");
         }
     
-        Station station = new Station(stationCount, name, x, y);
+        Station station = new Station(stationCount, name, x, y, 5);
         stations[stationCount] = station;
     
         stationCount++;
