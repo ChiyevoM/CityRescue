@@ -179,9 +179,62 @@ public class CityRescueImpl implements CityRescue {
     }
 
     @Override
-    public int addUnit(int stationId, UnitType type) throws IDNotRecognisedException, InvalidUnitException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+    public int addUnit(int stationId, UnitType type)
+            throws IDNotRecognisedException, InvalidUnitException, IllegalStateException {
+    
+        // 1. Validate type
+        if (type == null) {
+            throw new InvalidUnitException("Invalid unit type");
+        }
+    
+        // 2. Find station
+        Station station = null;
+    
+        for (int i = 0; i < stationCount; i++) {
+            if (stations[i].getId() == stationId) {
+                station = stations[i];
+                break;
+            }
+        }
+    
+        if (station == null) {
+            throw new IDNotRecognisedException("Station ID not recognised");
+        }
+    
+        // 3. Check global limit
+        if (unitCount >= MAX_UNITS) {
+            throw new IllegalStateException("Maximum units reached");
+        }
+    
+        // 3. Check station capacity
+        if (station.getCurrentUnitCount() >= station.getMaxUnits()) {
+            throw new IllegalStateException("Station capacity reached");
+        }
+    
+        // 5. Create correct unit type
+        Unit unit = null;
+    
+        if (type == UnitType.AMBULANCE) {
+            unit = new Ambulance(unitCount, station);
+        }
+        else if (type == UnitType.FIRE_ENGINE) {
+            unit = new FireEngine(unitCount, station);
+        }
+        else if (type == UnitType.POLICE_CAR) {
+            unit = new PoliceCar(unitCount, station);
+        }
+    
+        // 6. Store globally
+        units[unitCount] = unit;
+    
+        // 7. Add to station
+        station.addUnit(unit);
+    
+        // 8. Increase counter
+        unitCount++;
+    
+        // 9. Return ID
+        return unit.getId();
     }
 
     @Override
