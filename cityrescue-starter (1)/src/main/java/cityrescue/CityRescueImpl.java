@@ -81,9 +81,27 @@ public class CityRescueImpl implements CityRescue {
     }
 
     @Override
-    public int addStation(String name, int x, int y) throws InvalidNameException, InvalidLocationException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+    public int addStation(String name, int x, int y)
+            throws InvalidNameException, InvalidLocationException {
+    
+        if (name == null || name.trim().isEmpty()) {
+            throw new InvalidNameException("Invalid name");
+        }
+    
+        if (!cityMap.inBounds(x, y)) {
+            throw new InvalidLocationException("Location out of bounds");
+        }
+    
+        if (stationCount >= MAX_STATIONS) {
+            throw new IllegalStateException("Maximum stations reached");
+        }
+    
+        Station station = new Station(stationCount, name, x, y);
+        stations[stationCount] = station;
+    
+        stationCount++;
+    
+        return station.getId();
     }
 
     @Override
