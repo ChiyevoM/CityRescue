@@ -113,7 +113,7 @@ public class CityRescueImpl implements CityRescue {
         int index = -1;
     
         for (int i = 0; i < stationCount; i++) {
-            if (stations[i].getId() == stationId) {
+            if (stations[i].getStationId() == stationId) {
                 station = stations[i];
                 index = i;
                 break;
@@ -125,7 +125,7 @@ public class CityRescueImpl implements CityRescue {
         }
     
         // 2. Check if station still has units
-        if (station.getCurrentUnitCount() > 0) {
+        if (station.getUnitCount() > 0) {
             throw new IllegalStateException("Cannot remove station with units");
         }
     
