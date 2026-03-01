@@ -11,36 +11,65 @@ public class Station {
     private Unit[] units;
     private int unitCount;
 
-    public Station(int stationId, String name, int x, int y, int capacity) {
+    public Station(int stationId, String name, int x, int y) {
         this.stationId = stationId;
         this.name = name;
         this.x = x;
         this.y = y;
-        this.capacity = capacity;
-        this.units = new Unit[capacity];
+
+        this.capacity = 5; // default capacity
+        this.units = new Unit[50]; // allow room internally
         this.unitCount = 0;
     }
 
-    public int getStationId() { return stationId; }
-    public String getName() { return name; }
-    public int getX() { return x; }
-    public int getY() { return y; }
-
-    public int getCapacity() { return capacity; }
-    public int getUnitCount() { return unitCount; }
-
-    public void setCapacity(int newCapacity) {
-        this.capacity = newCapacity
+    public int getId() {
+        return stationId;
     }
 
-    public boolean hasSpace() {
-        return unitCount < capacity;
+    public String getName() {
+        return name;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getMaxUnits() {
+        return capacity;
+    }
+
+    public int getCurrentUnitCount() {
+        return unitCount;
+    }
+
+    public void setMaxUnits(int newCapacity) {
+        this.capacity = newCapacity;
     }
 
     public void addUnit(Unit unit) {
-        units[unitCount++] = unit;
+        units[unitCount] = unit;
+        unitCount++;
     }
 
+    public void removeUnit(Unit unit) {
+        for (int i = 0; i < unitCount; i++) {
+            if (units[i] == unit) {
+
+                for (int j = i; j < unitCount - 1; j++) {
+                    units[j] = units[j + 1];
+                }
+
+                units[unitCount - 1] = null;
+                unitCount--;
+                break;
+            }
+        }
+    }
+}
     public void removeUnit(Unit unit) {
     }
 }
