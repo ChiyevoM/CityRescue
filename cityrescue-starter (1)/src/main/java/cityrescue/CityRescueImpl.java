@@ -145,7 +145,7 @@ public class CityRescueImpl implements CityRescue {
         Station station = null;
     
         for (int i = 0; i < stationCount; i++) {
-            if (stations[i].getId() == stationId) {
+            if (stations[i].getStationId() == stationId) {
                 station = stations[i];
                 break;
             }
@@ -159,11 +159,11 @@ public class CityRescueImpl implements CityRescue {
             throw new InvalidCapacityException("Invalid capacity");
         }
     
-        if (maxUnits < station.getCurrentUnitCount()) {
+        if (maxUnits < station.getUnitCount()) {
             throw new InvalidCapacityException("Capacity less than current units");
         }
     
-        station.setMaxUnits(maxUnits);
+        station.setCapacity(maxUnits);
     }
 
     @Override
@@ -172,7 +172,7 @@ public class CityRescueImpl implements CityRescue {
         int[] ids = new int[stationCount];
     
         for (int i = 0; i < stationCount; i++) {
-            ids[i] = stations[i].getId();
+            ids[i] = stations[i].getStationId();
         }
     
         return ids;
@@ -191,7 +191,7 @@ public class CityRescueImpl implements CityRescue {
         Station station = null;
     
         for (int i = 0; i < stationCount; i++) {
-            if (stations[i].getId() == stationId) {
+            if (stations[i].getStationId() == stationId) {
                 station = stations[i];
                 break;
             }
@@ -207,7 +207,7 @@ public class CityRescueImpl implements CityRescue {
         }
     
         // 3. Check station capacity
-        if (station.getCurrentUnitCount() >= station.getMaxUnits()) {
+        if (station.getUnitCount() >= station.getCapacity()) {
             throw new IllegalStateException("Station capacity reached");
         }
     
