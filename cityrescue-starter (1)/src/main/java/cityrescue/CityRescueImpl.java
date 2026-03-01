@@ -255,16 +255,41 @@ public class CityRescueImpl implements CityRescue {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
-    @Override
-    public int[] getUnitIds() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
 
     @Override
+    public int[] getUnitIds() {
+    
+        int[] ids = new int[unitCount];
+    
+        for (int i = 0; i < unitCount; i++) {
+            ids[i] = units[i].getId();
+        }
+    
+        return ids;
+    }
+    
+    @Override
     public String viewUnit(int unitId) throws IDNotRecognisedException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+    
+        Unit unit = null;
+    
+        // 1. Find unit
+        for (int i = 0; i < unitCount; i++) {
+            if (units[i].getId() == unitId) {
+                unit = units[i];
+                break;
+            }
+        }
+    
+        if (unit == null) {
+            throw new IDNotRecognisedException("Unit ID not recognised");
+        }
+    
+        // 2. Build readable output
+        return "Unit ID: " + unit.getId() +
+               ", Type: " + unit.getType() +
+               ", Station: " + unit.getStation().getName() +
+               ", Out of Service: " + unit.isOutOfService();
     }
 
     @Override
