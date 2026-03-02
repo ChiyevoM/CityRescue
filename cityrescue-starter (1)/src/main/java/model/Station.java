@@ -11,14 +11,13 @@ public class Station {
     private Unit[] units;
     private int unitCount;
 
-    public Station(int stationId, String name, int x, int y) {
+    public Station(int stationId, String name, int x, int y, int capacity) {
         this.stationId = stationId;
         this.name = name;
         this.x = x;
         this.y = y;
-
-        this.capacity = 5; // default capacity
-        this.units = new Unit[50]; // allow room internally
+        this.capacity = capacity;
+        this.units = new Unit[capacity];
         this.unitCount = 0;
     }
 
@@ -45,6 +44,22 @@ public class Station {
     public int getCurrentUnitCount() {
         return unitCount;
     }
+    
+    public int getStationId() {
+        return stationId;
+    }
+
+    public int getUnitCount() {
+        return unitCount;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
 
     public void setMaxUnits(int newCapacity) {
         this.capacity = newCapacity;
@@ -68,8 +83,5 @@ public class Station {
                 break;
             }
         }
-    }
-
-    public void removeUnit(Unit unit) {
     }
 }

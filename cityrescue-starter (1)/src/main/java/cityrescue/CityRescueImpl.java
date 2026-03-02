@@ -215,19 +215,19 @@ public class CityRescueImpl implements CityRescue {
         Unit unit = null;
     
         if (type == UnitType.AMBULANCE) {
-            unit = new Ambulance(unitCount, type,
+            unit = new Ambulance(unitCount,
                     station.getX(),
                     station.getY(),
                     station.getStationId());
         }
         else if (type == UnitType.FIRE_ENGINE) {
-            unit = new FireEngine(unitCount, type,
+            unit = new FireEngine(unitCount,
                     station.getX(),
                     station.getY(),
                     station.getStationId());
         }
         else if (type == UnitType.POLICE_CAR) {
-            unit = new PoliceCar(unitCount, type,
+            unit = new PoliceCar(unitCount,
                     station.getX(),
                     station.getY(),
                     station.getStationId());
@@ -459,9 +459,33 @@ public class CityRescueImpl implements CityRescue {
     }
 
     @Override
-    public String viewIncident(int incidentId) throws IDNotRecognisedException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+    public String viewIncident(int incidentId)
+            throws IDNotRecognisedException {
+
+        Incident incident = null;
+
+        // 1. Find the incident
+        for (int i = 0; i < incidentCount; i++) {
+            if (incidents[i].getId() == incidentId) {
+                incident = incidents[i];
+                break;
+            }
+        }
+
+        // 2. If not found
+        if (incident == null) {
+            throw new IDNotRecognisedException("Incident ID not recognised");
+        }
+
+        // 3. Build information string
+        String info = "Incident ID: " + incident.getId()
+                + ", Type: " + incident.getType()
+                + ", Severity: " + incident.getSeverity()
+                + ", Location: (" + incident.getX()
+                + "," + incident.getY() + ")"
+                + ", Status: " + incident.getStatus();
+
+        return info;
     }
 
     @Override

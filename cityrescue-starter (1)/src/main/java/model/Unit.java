@@ -1,8 +1,6 @@
 package cityrescue.model;
 
-import enums.UnitType;
-import enums.UnitStatus;
-import enums.IncidentType;
+import cityrescue.enums.*;
 
 public abstract class Unit {
 
@@ -12,6 +10,7 @@ public abstract class Unit {
     protected int y;
     protected int homeStationId;
     protected UnitStatus status;
+    protected Station station;
 
     protected Incident assignedIncident;
     protected int workTicksRemaining;
@@ -23,6 +22,7 @@ public abstract class Unit {
         this.y = y;
         this.homeStationId = homeStationId;
         this.status = UnitStatus.IDLE;
+        this.station = null;
     }
 
     public int getUnitId() { return unitId; }
@@ -31,6 +31,14 @@ public abstract class Unit {
     public int getY() { return y; }
     public int getHomeStationId() { return homeStationId; }
     public UnitStatus getStatus() { return status; }
+    
+    public Station getStation() {
+        return station;
+    }
+
+    public void setStation(Station station) {
+        this.station = station;
+    }
 
     public void setStatus(UnitStatus status) {
         this.status = status;

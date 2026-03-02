@@ -1,6 +1,6 @@
 package cityrescue.model;
 
-import enums.*;
+import cityrescue.enums.*;
 
 public class PoliceCar extends Unit {
 

@@ -1,7 +1,7 @@
 package cityrescue.model;
 
-import enums.IncidentType;
-import enums.IncidentStatus;
+import cityrescue.enums.IncidentType;
+import cityrescue.enums.IncidentStatus;
 
 public class Incident {
 
@@ -29,6 +29,7 @@ public class Incident {
     public int getX() { return x; }
     public int getY() { return y; }
     public IncidentStatus getStatus() { return status; }
+    public int getId() {return incidentId;}
 
     public void setSeverity(int severity) {
         this.severity = severity;
