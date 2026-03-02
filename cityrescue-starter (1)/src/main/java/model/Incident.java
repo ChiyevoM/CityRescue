@@ -11,14 +11,8 @@ public class Incident {
     private int x;
     private int y;
     private IncidentStatus status;
-
     private Unit assignedUnit;
-
-    public Unit getAssignedUnit() {
-    return assignedUnit;
-}
-
-}
+    public Unit getAssignedUnit; 
 
     public Incident(int incidentId, IncidentType type, int severity, int x, int y) {
         this.incidentId = incidentId;
