@@ -403,10 +403,35 @@ public class CityRescueImpl implements CityRescue {
                 + ", Home Station ID: " + unit.getHomeStationId();
     }
 
+
     @Override
-    public int reportIncident(IncidentType type, int severity, int x, int y) throws InvalidSeverityException, InvalidLocationException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+    public int reportIncident(IncidentType type, int severity, int x, int y)
+            throws InvalidSeverityException, InvalidLocationException {
+
+        // 1. Validate severity
+        if (severity < 1 || severity > 10) {
+            throw new InvalidSeverityException("Invalid severity");
+        }
+
+        // 2. Validate location
+        if (!cityMap.inBounds(x, y)) {
+            throw new InvalidLocationException("Location out of bounds");
+        }
+
+        // 3. Check incident limit
+        if (incidentCount >= MAX_INCIDENTS) {
+            throw new IllegalStateException("Maximum incidents reached");
+        }
+
+        // 4. Create incident
+        Incident incident = new Incident(incidentCount, type, severity, x, y);
+
+        // 5. Store it
+        incidents[incidentCount] = incident;
+        incidentCount++;
+
+        // 6. Return ID
+        return incident.getId();
     }
 
     @Override
