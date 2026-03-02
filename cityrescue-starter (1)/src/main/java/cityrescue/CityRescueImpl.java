@@ -470,9 +470,8 @@ public void cancelIncident(int incidentId)
 }
 
     @Override
-    public void escalateIncident(int incidentId, int newSeverity) throws IDNotRecognisedException, InvalidSeverityException, IllegalStateException {
-        throw new IDNotRecognisedException, InvalidSeverityException, IllegalStateException {
-
+    public void escalateIncident(int incidentId, int newSeverity)
+        throws IDNotRecognisedException, InvalidSeverityException, IllegalStateException {
     Incident incident = null;
 
     // 1. Find incident
@@ -546,9 +545,44 @@ public void cancelIncident(int incidentId)
 
     @Override
     public void dispatch() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+
+    // Loop through all incidents
+        for (int i = 0; i < incidentCount; i++) {
+
+            Incident incident = incidents[i];
+
+            // Only dispatch REPORTED incidents
+            if (incident.getStatus() == IncidentStatus.REPORTED) {
+
+                // Try to find a suitable unit
+                for (int j = 0; j < unitCount; j++) {
+
+                    Unit unit = units[j];
+
+                    // Unit must be IDLE and able to handle the incident
+                    if (unit.getStatus() == UnitStatus.IDLE &&
+                        unit.canHandle(incident.getType())) {
+
+                        // Assign unit to incident
+                        incident.setAssignedUnit(unit);
+                        unit.assignIncident(incident);
+
+                        // Update statuses
+                        incident.setStatus(IncidentStatus.DISPATCHED);
+                        unit.setStatus(UnitStatus.BUSY);
+
+                        // Set work ticks
+                        int ticks = unit.getTicksToResolve(incident.getSeverity());
+                        unit.setWorkTicksRemaining(ticks);
+
+                        // Stop searching once assigned
+                        break;
+                    }
+                }
+            }
+        }
     }
+
 
     @Override
     public void tick() {
