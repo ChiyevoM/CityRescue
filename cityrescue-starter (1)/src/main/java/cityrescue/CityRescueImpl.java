@@ -284,9 +284,56 @@ public class CityRescueImpl implements CityRescue {
     }
 
     @Override
-    public void transferUnit(int unitId, int newStationId) throws IDNotRecognisedException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+    public void transferUnit(int unitId, int newStationId)
+            throws IDNotRecognisedException, IllegalStateException {
+    
+        Unit unit = null;
+    
+        // 1. Find unit
+        for (int i = 0; i < unitCount; i++) {
+            if (units[i].getUnitId() == unitId) {
+                unit = units[i];
+                break;
+            }
+        }
+    
+        if (unit == null) {
+            throw new IDNotRecognisedException("Unit ID not recognised");
+        }
+    
+        // 2. Cannot transfer if busy
+        if (unit.getStatus() == UnitStatus.BUSY) {
+            throw new IllegalStateException("Cannot transfer busy unit");
+        }
+    
+        // 3. Find new station
+        Station newStation = null;
+    
+        for (int i = 0; i < stationCount; i++) {
+            if (stations[i].getId() == newStationId) {
+                newStation = stations[i];
+                break;
+            }
+        }
+    
+        if (newStation == null) {
+            throw new IDNotRecognisedException("Station ID not recognised");
+        }
+    
+        // 4. Check capacity
+        if (newStation.getCurrentUnitCount() >= newStation.getMaxUnits()) {
+            throw new IllegalStateException("Station capacity reached");
+        }
+    
+        // 5. Remove from old station
+        Station oldStation = unit.getStation();
+        oldStation.removeUnit(unit);
+    
+        // 6. Add to new station
+        newStation.addUnit(unit);
+    
+        // 7. Update unit's station reference
+        unit.setStation(newStation);
     }
 
     @Override
