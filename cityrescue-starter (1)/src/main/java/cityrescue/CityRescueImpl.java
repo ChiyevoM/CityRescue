@@ -259,11 +259,35 @@ public class CityRescueImpl implements CityRescue {
     }
 
     @Override
-    public void setUnitOutOfService(int unitId, boolean outOfService) throws IDNotRecognisedException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+    public void setUnitOutOfService(int unitId, boolean outOfService)
+            throws IDNotRecognisedException, IllegalStateException {
+    
+        Unit unit = null;
+    
+        // 1. Find the unit
+        for (int i = 0; i < unitCount; i++) {
+            if (units[i].getUnitId() == unitId) {
+                unit = units[i];
+                break;
+            }
+        }
+    
+        if (unit == null) {
+            throw new IDNotRecognisedException("Unit ID not recognised");
+        }
+    
+        // 2. Cannot take unit out of service if it's busy
+        if (unit.getStatus() == UnitStatus.BUSY && outOfService) {
+            throw new IllegalStateException("Cannot take busy unit out of service");
+        }
+    
+        // 3. Set status
+        if (outOfService) {
+            unit.setStatus(UnitStatus.OUT_OF_SERVICE);
+        } else {
+            unit.setStatus(UnitStatus.IDLE);
+        }
     }
-
 
     @Override
     public int[] getUnitIds() {
