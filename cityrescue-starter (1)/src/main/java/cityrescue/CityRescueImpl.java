@@ -471,9 +471,36 @@ public void cancelIncident(int incidentId)
 
     @Override
     public void escalateIncident(int incidentId, int newSeverity) throws IDNotRecognisedException, InvalidSeverityException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        throw new IDNotRecognisedException, InvalidSeverityException, IllegalStateException {
+
+    Incident incident = null;
+
+    // 1. Find incident
+    for (int i = 0; i < incidentCount; i++) {
+        if (incidents[i].getId() == incidentId) {
+            incident = incidents[i];
+            break;
+        }
     }
+
+    if (incident == null) {
+        throw new IDNotRecognisedException("Incident ID not recognised");
+    }
+
+    // 2. Validate severity
+    if (newSeverity < 1 || newSeverity > 10) {
+        throw new InvalidSeverityException("Invalid severity");
+    }
+
+    // 3. Cannot escalate resolved or cancelled incidents
+    if (incident.getStatus() == IncidentStatus.RESOLVED ||
+        incident.getStatus() == IncidentStatus.CANCELLED) {
+        throw new IllegalStateException("Cannot escalate finished incident");
+    }
+
+    // 4. Update severity
+    incident.setSeverity(newSeverity);
+}
 
     @Override
     public int[] getIncidentIds() {
