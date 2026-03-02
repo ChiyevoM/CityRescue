@@ -29,6 +29,7 @@ public void setAssignedUnit(Unit unit) {
         this.x = x;
         this.y = y;
         this.status = IncidentStatus.REPORTED;
+        this.assignedUnit = null;
     }
 
     public int getIncidentId() { return incidentId; }
