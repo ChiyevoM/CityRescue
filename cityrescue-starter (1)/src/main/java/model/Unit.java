@@ -23,6 +23,7 @@ public abstract class Unit {
         this.homeStationId = homeStationId;
         this.status = UnitStatus.IDLE;
         this.station = null;
+        this.workTicksRemaining = 0;
     }
 
     public int getUnitId() { return unitId; }
@@ -59,6 +60,7 @@ public abstract class Unit {
 
     public void clearIncident() {
         this.assignedIncident = null;
+        this.workTicksRemaining = 0;
     }
 
     public int getWorkTicksRemaining() {
