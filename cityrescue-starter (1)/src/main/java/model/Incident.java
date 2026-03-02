@@ -14,6 +14,14 @@ public class Incident {
 
     private Unit assignedUnit;
 
+    public Unit getAssignedUnit() {
+    return assignedUnit;
+}
+
+public void setAssignedUnit(Unit unit) {
+    this.assignedUnit = unit;
+}
+
     public Incident(int incidentId, IncidentType type, int severity, int x, int y) {
         this.incidentId = incidentId;
         this.type = type;
