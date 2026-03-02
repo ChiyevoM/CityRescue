@@ -18,8 +18,6 @@ public class Incident {
     return assignedUnit;
 }
 
-public void setAssignedUnit(Unit unit) {
-    this.assignedUnit = unit;
 }
 
     public Incident(int incidentId, IncidentType type, int severity, int x, int y) {
