@@ -29,6 +29,7 @@ public class CityRescueImpl implements CityRescue {
     private int stationCount;
     private int unitCount;
     private int incidentCount;
+    private int nextStationId = 1;
     
     // Tick counter
     private int tick;
