@@ -595,7 +595,26 @@ public void cancelIncident(int incidentId)
 
     @Override
     public String getStatus() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+
+    StringBuilder sb = new StringBuilder();
+
+    sb.append("Tick: ").append(tick).append("\n");
+
+    sb.append("Stations:\n");
+    for (int i = 0; i < stationCount; i++) {
+        sb.append(stations[i]).append("\n");
     }
+
+    sb.append("Units:\n");
+    for (int i = 0; i < unitCount; i++) {
+        sb.append(units[i]).append("\n");
+    }
+
+    sb.append("Incidents:\n");
+    for (int i = 0; i < incidentCount; i++) {
+        sb.append(incidents[i]).append("\n");
+    }
+
+    return sb.toString();
+}
 }
