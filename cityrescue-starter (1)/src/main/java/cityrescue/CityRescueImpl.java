@@ -54,6 +54,7 @@ public class CityRescueImpl implements CityRescue {
         nextStationId = 1;
     
         tick = 0;
+
     }
 
     @Override
@@ -601,17 +602,17 @@ public void cancelIncident(int incidentId)
             .append(tick)
             .append("\n");
 
-        sb.append("Stations: \n");
+        sb.append("Stations:\n");
         for (int i = 0; i < stationCount; i++) {
             sb.append(stations[i]).append("\n");
         }
 
-        sb.append("Units: \n");
+        sb.append("Units:\n");
         for (int i = 0; i < unitCount; i++) {
             sb.append(units[i]).append("\n");
         }
 
-        sb.append("Incidents: \n");
+        sb.append("Incidents:\n");
         for (int i = 0; i < incidentCount; i++) {
             sb.append(incidents[i]).append("\n");
         }
