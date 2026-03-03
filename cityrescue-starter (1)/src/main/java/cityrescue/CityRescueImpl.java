@@ -397,11 +397,11 @@ public int addStation(String name, int x, int y)
             throw new IDNotRecognisedException("Unit ID not recognised");
         }
     
-        return "Unit ID: " + unit.getUnitId()
-                + ", Type: " + unit.getType()
-                + ", Status: " + unit.getStatus()
-                + ", Location: (" + unit.getX() + "," + unit.getY() + ")"
-                + ", Home Station ID: " + unit.getHomeStationId();
+        return "Unit " + unit.getUnitId() + ": "
+            + "Type=" + unit.getType()
+            + ", Status=" + unit.getStatus()
+            + ", Location=(" + unit.getX() + "," + unit.getY() + ")"
+            + ", HomeStation=" + unit.getHomeStationId();
     }
 
 
@@ -591,33 +591,33 @@ public void cancelIncident(int incidentId)
     }
 
     @Override
-public String getStatus() {
+    public String getStatus() {
 
-    StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
-    sb.append("Grid: ")
-      .append(cityMap.getWidth())
-      .append("x")
-      .append(cityMap.getHeight())
-      .append("\n");
+        sb.append("Grid: ")
+        .append(cityMap.getWidth())
+        .append("x")
+        .append(cityMap.getHeight())
+        .append("\n");
 
-    sb.append("Tick: ").append(tick).append("\n");
+        sb.append("Tick: ").append(tick).append("\n");
 
-    sb.append("Stations:\n");
-    for (int i = 0; i < stationCount; i++) {
-        sb.append(stations[i]).append("\n");
+        sb.append("Stations:\n");
+        for (int i = 0; i < stationCount; i++) {
+            sb.append(stations[i]).append("\n");
+        }
+
+        sb.append("Units:\n");
+        for (int i = 0; i < unitCount; i++) {
+            sb.append(units[i]).append("\n");
+        }
+
+        sb.append("Incidents:\n");
+        for (int i = 0; i < incidentCount; i++) {
+            sb.append(incidents[i]).append("\n");
+        }
+
+        return sb.toString();
     }
-
-    sb.append("Units:\n");
-    for (int i = 0; i < unitCount; i++) {
-        sb.append(units[i]).append("\n");
-    }
-
-    sb.append("Incidents:\n");
-    for (int i = 0; i < incidentCount; i++) {
-        sb.append(incidents[i]).append("\n");
-    }
-
-    return sb.toString();
-}
 }
