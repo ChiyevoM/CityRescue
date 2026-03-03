@@ -81,29 +81,30 @@ public class CityRescueImpl implements CityRescue {
         cityMap.removeObstacle(x, y);
     }
 
-    @Override
-    public int addStation(String name, int x, int y)
-            throws InvalidNameException, InvalidLocationException {
-    
-        if (name == null || name.trim().isEmpty()) {
-            throw new InvalidNameException("Invalid name");
-        }
-    
-        if (!cityMap.inBounds(x, y)) {
-            throw new InvalidLocationException("Location out of bounds");
-        }
-    
-        if (stationCount >= MAX_STATIONS) {
-            throw new IllegalStateException("Maximum stations reached");
-        }
-    
-        Station station = new Station(stationCount, name, x, y, 5);
-        stations[stationCount] = station;
-    
-        stationCount++;
-    
-        return station.getId();
+   @Override
+public int addStation(String name, int x, int y)
+        throws InvalidNameException, InvalidLocationException {
+
+    if (name == null || name.trim().isEmpty()) {
+        throw new InvalidNameException("Invalid name");
     }
+
+    if (!cityMap.inBounds(x, y)) {
+        throw new InvalidLocationException("Location out of bounds");
+    }
+
+    if (stationCount >= MAX_STATIONS) {
+        throw new IllegalStateException("Maximum stations reached");
+    }
+
+    // Use nextStationId instead of stationCount
+    Station station = new Station(nextStationId, name, x, y, 5);
+    stations[stationCount] = station;
+
+    stationCount++;
+
+    return nextStationId++;  // return current ID then increment
+}
 
     @Override
     public void removeStation(int stationId)
