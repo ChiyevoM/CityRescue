@@ -398,11 +398,11 @@ public int addStation(String name, int x, int y)
             throw new IDNotRecognisedException("Unit ID not recognised");
         }
     
-        return "Unit " + unit.getUnitId() + ": "
-            + "Type=" + unit.getType()
-            + ", Status=" + unit.getStatus()
-            + ", Location=(" + unit.getX() + "," + unit.getY() + ")"
-            + ", HomeStation=" + unit.getHomeStationId();
+        return "Unit " + unit.getUnitId() + ":\n"
+        + "Type=" + unit.getType() + "\n"
+        + "Status=" + unit.getStatus() + "\n"
+        + "Location=(" + unit.getX() + "," + unit.getY() + ")\n"
+        + "HomeStation=" + unit.getHomeStationId();
     }
 
 
@@ -516,30 +516,26 @@ public void cancelIncident(int incidentId)
     }
 
     @Override
-    public String viewIncident(int incidentId)
-            throws IDNotRecognisedException {
+public String viewIncident(int incidentId) throws IDNotRecognisedException {
 
-        Incident incident = null;
+    Incident incident = null;
 
-        // 1. Find the incident
-        for (int i = 0; i < incidentCount; i++) {
-            if (incidents[i].getId() == incidentId) {
-                incident = incidents[i];
-                break;
-            }
+    for (int i = 0; i < incidentCount; i++) {
+        if (incidents[i].getIncidentId() == incidentId) {
+            incident = incidents[i];
+            break;
         }
-
-        // 2. If not found
-        if (incident == null) {
-            throw new IDNotRecognisedException("Incident ID not recognised");
-        }
-
-        return "Incident " + incident.getId() + ": "
-            + "Type=" + incident.getType()
-            + ", Severity=" + incident.getSeverity()
-            + ", Location=(" + incident.getX() + "," + incident.getY() + ")"
-            + ", Status=" + incident.getStatus();
     }
+
+    if (incident == null) {
+        throw new IDNotRecognisedException("Incident ID not recognised");
+    }
+
+    return "Incident " + incident.getIncidentId() + ":\n"
+        + "Type=" + incident.getType() + "\n"
+        + "Status=" + incident.getStatus() + "\n"
+        + "Location=(" + incident.getX() + "," + incident.getY() + ")";
+}
 
     @Override
     public void dispatch() {
@@ -603,19 +599,31 @@ public void cancelIncident(int incidentId)
             .append("\n");
 
         sb.append("Stations:\n");
+    if (stationCount == 0) {
+        sb.append("(none)\n");
+    } else {
         for (int i = 0; i < stationCount; i++) {
             sb.append(stations[i]).append("\n");
         }
+    }
 
-        sb.append("Units:\n");
+    sb.append("Units:\n");
+    if (unitCount == 0) {
+        sb.append("(none)\n");
+    } else {
         for (int i = 0; i < unitCount; i++) {
             sb.append(units[i]).append("\n");
         }
+    }
 
-        sb.append("Incidents:\n");
+    sb.append("Incidents:\n");
+    if (incidentCount == 0) {
+        sb.append("(none)\n");
+    } else {
         for (int i = 0; i < incidentCount; i++) {
             sb.append(incidents[i]).append("\n");
         }
+    }
 
         return sb.toString();
     }
