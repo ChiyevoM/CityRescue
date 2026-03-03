@@ -64,14 +64,12 @@ public class CityRescueImpl implements CityRescue {
     @Override
     public void addObstacle(int x, int y) throws InvalidLocationException {
 
-        // Validate location first
         if (!cityMap.inBounds(x, y)) {
             throw new InvalidLocationException("Location out of bounds");
         }
 
         cityMap.addObstacle(x, y);
     }
-
     @Override
     public void removeObstacle(int x, int y) throws InvalidLocationException {
 
