@@ -51,6 +51,7 @@ public class CityRescueImpl implements CityRescue {
         stationCount = 0;
         unitCount = 0;
         incidentCount = 0;
+        nextStationId = 1;
     
         tick = 0;
     }
