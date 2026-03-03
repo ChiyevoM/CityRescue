@@ -74,4 +74,6 @@ public abstract class Unit {
     public abstract boolean canHandle(IncidentType type);
 
     public abstract int getTicksToResolve(int severity);
+
+    
 }
