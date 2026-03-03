@@ -384,25 +384,41 @@ public int addStation(String name, int x, int y)
 
     @Override
     public String viewUnit(int unitId) throws IDNotRecognisedException {
-    
-        Unit unit = null;
-    
+
+         Unit unit = null;
+
         for (int i = 0; i < unitCount; i++) {
             if (units[i].getUnitId() == unitId) {
                 unit = units[i];
                 break;
             }
         }
-    
+
         if (unit == null) {
             throw new IDNotRecognisedException("Unit ID not recognised");
         }
-    
-        return "Unit " + unit.getUnitId() + ":\n"
-        + "Type=" + unit.getType() + "\n"
-        + "Status=" + unit.getStatus() + "\n"
-        + "Location=(" + unit.getX() + "," + unit.getY() + ")\n"
-        + "HomeStation=" + unit.getHomeStationId();
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("U#").append(unit.getUnitId());
+        sb.append(" TYPE=").append(unit.getType());
+        sb.append(" HOME=").append(unit.getHomeStationId());
+        sb.append(" LOC=(").append(unit.getX()).append(",").append(unit.getY()).append(")");
+        sb.append(" STATUS=").append(unit.getStatus());
+
+        // Incident field
+        if (unit.getIncidentId() == -1) {
+            sb.append(" INCIDENT=-");
+        } else {
+            sb.append(" INCIDENT=").append(unit.getIncidentId());
+        }
+
+        // WORK field only if AT_SCENE
+        if (unit.getStatus() == UnitStatus.AT_SCENE) {
+            sb.append(" WORK=").append(unit.getWorkRemaining());
+        }
+
+        return sb.toString();
     }
 
 
@@ -516,26 +532,37 @@ public void cancelIncident(int incidentId)
     }
 
     @Override
-public String viewIncident(int incidentId) throws IDNotRecognisedException {
+    public String viewIncident(int incidentId) throws IDNotRecognisedException {
 
-    Incident incident = null;
+        Incident incident = null;
 
-    for (int i = 0; i < incidentCount; i++) {
-        if (incidents[i].getIncidentId() == incidentId) {
-            incident = incidents[i];
-            break;
+        for (int i = 0; i < incidentCount; i++) {
+            if (incidents[i].getIncidentId() == incidentId) {
+                incident = incidents[i];
+                break;
+            }
         }
-    }
 
-    if (incident == null) {
-        throw new IDNotRecognisedException("Incident ID not recognised");
-    }
+        if (incident == null) {
+            throw new IDNotRecognisedException("Incident ID not recognised");
+        }
 
-    return "Incident " + incident.getIncidentId() + ":\n"
-        + "Type=" + incident.getType() + "\n"
-        + "Status=" + incident.getStatus() + "\n"
-        + "Location=(" + incident.getX() + "," + incident.getY() + ")";
-}
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("I#").append(incident.getIncidentId());
+        sb.append(" TYPE=").append(incident.getType());
+        sb.append(" SEV=").append(incident.getSeverity());
+        sb.append(" LOC=(").append(incident.getX()).append(",").append(incident.getY()).append(")");
+        sb.append(" STATUS=").append(incident.getStatus());
+
+        if (incident.getUnitId() == -1) {
+            sb.append(" UNIT=-");
+        } else {
+            sb.append(" UNIT=").append(incident.getUnitId());
+        }
+
+        return sb.toString();
+    }
 
     @Override
     public void dispatch() {
@@ -588,32 +615,33 @@ public String viewIncident(int incidentId) throws IDNotRecognisedException {
 
         StringBuilder sb = new StringBuilder();
 
-    // Incidents section
-    sb.append("INCIDENTS").append("\n");
-    for (int i = 0; i < incidentCount; i++) {
-        try {
-            sb.append(viewIncident(incidents[i].getIncidentId())).append("\n");
-        } catch (IDNotRecognisedException e) {
-         // This should never happen because IDs come from our own array
-        }
-    }
+        // Header
+        sb.append("TICK=").append(tick).append("\n");
+        sb.append("STATIONS=").append(stationCount).append("\n");
+        sb.append("UNITS=").append(unitCount).append("\n");
+        sb.append("INCIDENTS=").append(incidentCount).append("\n");
+        sb.append("OBSTACLES=").append(cityMap.getObstacleCount()).append("\n");
 
-    // Units section
-    sb.append("UNITS").append("\n");
-    for (int i = 0; i < unitCount; i++) {
-        try {
-            sb.append(viewUnit(units[i].getUnitId())).append("\n");
-        } catch (IDNotRecognisedException e) {
-            // Should never happen
+        // INCIDENTS section
+        sb.append("INCIDENTS").append("\n");
+        for (int i = 0; i < incidentCount; i++) {
+            try {
+                sb.append(viewIncident(incidents[i].getIncidentId())).append("\n");
+            } catch (IDNotRecognisedException e) {
+                // This should never happen because IDs come from our own storage
+            }
         }
-    }
 
-        // Units section
+        // UNITS section
         sb.append("UNITS").append("\n");
         for (int i = 0; i < unitCount; i++) {
-            sb.append(viewUnit(units[i].getUnitId())).append("\n");
+            try {
+                sb.append(viewUnit(units[i].getUnitId())).append("\n");
+            } catch (IDNotRecognisedException e) {
+                // Should never happen
+            }
         }
 
-    return sb.toString().trim();
-}
+        return sb.toString().trim();
+    }
 }
