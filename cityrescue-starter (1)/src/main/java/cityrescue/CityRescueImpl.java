@@ -589,8 +589,7 @@ public void cancelIncident(int incidentId)
 
     @Override
     public void tick() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        tick++;
     }
 
     @Override
