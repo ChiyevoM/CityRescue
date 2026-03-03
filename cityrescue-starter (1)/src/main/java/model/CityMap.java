@@ -39,4 +39,18 @@ public class CityMap {
     public boolean isLegalMove(int x, int y) {
         return inBounds(x, y) && !isBlocked(x, y);
     }
+
+    public int getObstacleCount() {
+    int count = 0;
+
+    for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            if (blocked[x][y]) {
+                count++;
+            }
+        }
+    }
+
+    return count;
+}
 }

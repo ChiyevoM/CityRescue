@@ -588,18 +588,25 @@ public String viewIncident(int incidentId) throws IDNotRecognisedException {
 
         StringBuilder sb = new StringBuilder();
 
-        // Header section
-        sb.append("TICK=").append(tick).append("\n");
-        sb.append("STATIONS=").append(stationCount).append("\n");
-        sb.append("UNITS=").append(unitCount).append("\n");
-        sb.append("INCIDENTS=").append(incidentCount).append("\n");
-        sb.append("OBSTACLES=").append(cityMap.getObstacleCount()).append("\n");
-
-        // Incidents section
-        sb.append("INCIDENTS").append("\n");
-        for (int i = 0; i < incidentCount; i++) {
+    // Incidents section
+    sb.append("INCIDENTS").append("\n");
+    for (int i = 0; i < incidentCount; i++) {
+        try {
             sb.append(viewIncident(incidents[i].getIncidentId())).append("\n");
+        } catch (IDNotRecognisedException e) {
+         // This should never happen because IDs come from our own array
         }
+    }
+
+    // Units section
+    sb.append("UNITS").append("\n");
+    for (int i = 0; i < unitCount; i++) {
+        try {
+            sb.append(viewUnit(units[i].getUnitId())).append("\n");
+        } catch (IDNotRecognisedException e) {
+            // Should never happen
+        }
+    }
 
         // Units section
         sb.append("UNITS").append("\n");
