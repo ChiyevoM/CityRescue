@@ -533,15 +533,11 @@ public void cancelIncident(int incidentId)
             throw new IDNotRecognisedException("Incident ID not recognised");
         }
 
-        // 3. Build information string
-        String info = "Incident ID: " + incident.getId()
-                + ", Type: " + incident.getType()
-                + ", Severity: " + incident.getSeverity()
-                + ", Location: (" + incident.getX()
-                + "," + incident.getY() + ")"
-                + ", Status: " + incident.getStatus();
-
-        return info;
+        return "Incident " + incident.getId() + ": "
+            + "Type=" + incident.getType()
+            + ", Severity=" + incident.getSeverity()
+            + ", Location=(" + incident.getX() + "," + incident.getY() + ")"
+            + ", Status=" + incident.getStatus();
     }
 
     @Override
