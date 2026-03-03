@@ -597,7 +597,7 @@ public void cancelIncident(int incidentId)
             .append(cityMap.getHeight())
             .append("\n");
 
-        sb.append("Current Tick: ").append(tick).append("\n");
+        sb.append("Current Tick: ")
             .append(tick)
             .append("\n");
 
