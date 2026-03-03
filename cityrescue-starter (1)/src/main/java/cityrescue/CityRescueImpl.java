@@ -588,43 +588,25 @@ public String viewIncident(int incidentId) throws IDNotRecognisedException {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Grid Size: ")
-            .append(cityMap.getWidth())
-            .append("x")
-            .append(cityMap.getHeight())
-            .append("\n");
+        // Header section
+        sb.append("TICK=").append(tick).append("\n");
+        sb.append("STATIONS=").append(stationCount).append("\n");
+        sb.append("UNITS=").append(unitCount).append("\n");
+        sb.append("INCIDENTS=").append(incidentCount).append("\n");
+        sb.append("OBSTACLES=").append(cityMap.getObstacleCount()).append("\n");
 
-        sb.append("Current Tick: ")
-            .append(tick)
-            .append("\n");
-
-        sb.append("Stations:\n");
-    if (stationCount == 0) {
-        sb.append("(none)\n");
-    } else {
-        for (int i = 0; i < stationCount; i++) {
-            sb.append(stations[i]).append("\n");
-        }
-    }
-
-    sb.append("Units:\n");
-    if (unitCount == 0) {
-        sb.append("(none)\n");
-    } else {
-        for (int i = 0; i < unitCount; i++) {
-            sb.append(units[i]).append("\n");
-        }
-    }
-
-    sb.append("Incidents:\n");
-    if (incidentCount == 0) {
-        sb.append("(none)\n");
-    } else {
+        // Incidents section
+        sb.append("INCIDENTS").append("\n");
         for (int i = 0; i < incidentCount; i++) {
-            sb.append(incidents[i]).append("\n");
+            sb.append(viewIncident(incidents[i].getIncidentId())).append("\n");
         }
-    }
 
-        return sb.toString();
-    }
+        // Units section
+        sb.append("UNITS").append("\n");
+        for (int i = 0; i < unitCount; i++) {
+            sb.append(viewUnit(units[i].getUnitId())).append("\n");
+        }
+
+    return sb.toString().trim();
+}
 }
