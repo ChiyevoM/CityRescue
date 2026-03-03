@@ -591,13 +591,13 @@ public void cancelIncident(int incidentId)
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Grid: ")
+        sb.append("Grid Size: ")
         .append(cityMap.getWidth())
         .append("x")
         .append(cityMap.getHeight())
         .append("\n");
 
-        sb.append("Tick: ").append(tick).append("\n");
+        sb.append("Current Tick: ").append(tick).append("\n");
 
         sb.append("Stations:\n");
         for (int i = 0; i < stationCount; i++) {
