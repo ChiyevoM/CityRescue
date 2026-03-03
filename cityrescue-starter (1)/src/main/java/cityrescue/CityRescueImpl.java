@@ -591,9 +591,15 @@ public void cancelIncident(int incidentId)
     }
 
     @Override
-    public String getStatus() {
+public String getStatus() {
 
     StringBuilder sb = new StringBuilder();
+
+    sb.append("Grid: ")
+      .append(cityMap.getWidth())
+      .append("x")
+      .append(cityMap.getHeight())
+      .append("\n");
 
     sb.append("Tick: ").append(tick).append("\n");
 
