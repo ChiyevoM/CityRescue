@@ -98,7 +98,6 @@ public int addStation(String name, int x, int y)
         throw new IllegalStateException("Maximum stations reached");
     }
 
-    // Use nextStationId instead of stationCount
     Station station = new Station(nextStationId, name, x, y, 5);
     stations[stationCount] = station;
 
@@ -212,7 +211,7 @@ public int addStation(String name, int x, int y)
 
         Unit unit = null;
 
-        // 🔴 USE nextUnitId HERE
+        
         if (type == UnitType.AMBULANCE) {
             unit = new Ambulance(nextUnitId,
                     station.getX(),
@@ -237,7 +236,7 @@ public int addStation(String name, int x, int y)
 
         unitCount++;
 
-        // 🔴 increment AFTER returning ID
+        
         return nextUnitId++;
     }
     @Override
