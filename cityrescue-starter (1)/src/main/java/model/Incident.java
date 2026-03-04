@@ -12,7 +12,6 @@ public class Incident {
     private int y;
     private IncidentStatus status;
     private Unit assignedUnit;
-    public Unit getAssignedUnit; 
 
     public Incident(int incidentId, IncidentType type, int severity, int x, int y) {
         this.incidentId = incidentId;

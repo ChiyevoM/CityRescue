@@ -30,6 +30,7 @@ public class CityRescueImpl implements CityRescue {
     private int unitCount;
     private int incidentCount;
     private int nextStationId = 1;
+    private int nextUnitId = 1;
     
     // Tick counter
     private int tick;
@@ -183,71 +184,62 @@ public int addStation(String name, int x, int y)
     @Override
     public int addUnit(int stationId, UnitType type)
             throws IDNotRecognisedException, InvalidUnitException, IllegalStateException {
-    
-        // 1. Validate type
+
         if (type == null) {
             throw new InvalidUnitException("Invalid unit type");
         }
-    
-        // 2. Find station
+
+        // Find station
         Station station = null;
-    
         for (int i = 0; i < stationCount; i++) {
             if (stations[i].getStationId() == stationId) {
                 station = stations[i];
                 break;
             }
         }
-    
+
         if (station == null) {
             throw new IDNotRecognisedException("Station ID not recognised");
         }
-    
-        // 3. Check global limit
+
         if (unitCount >= MAX_UNITS) {
             throw new IllegalStateException("Maximum units reached");
         }
-    
-        // 3. Check station capacity
+
         if (station.getUnitCount() >= station.getCapacity()) {
             throw new IllegalStateException("Station capacity reached");
         }
-    
-        // 5. Create correct unit type
+
         Unit unit = null;
-    
+
+        // 🔴 USE nextUnitId HERE
         if (type == UnitType.AMBULANCE) {
-            unit = new Ambulance(unitCount,
+            unit = new Ambulance(nextUnitId,
                     station.getX(),
                     station.getY(),
                     station.getStationId());
         }
         else if (type == UnitType.FIRE_ENGINE) {
-            unit = new FireEngine(unitCount,
+            unit = new FireEngine(nextUnitId,
                     station.getX(),
                     station.getY(),
                     station.getStationId());
         }
         else if (type == UnitType.POLICE_CAR) {
-            unit = new PoliceCar(unitCount,
+            unit = new PoliceCar(nextUnitId,
                     station.getX(),
                     station.getY(),
                     station.getStationId());
         }
-    
-        // 6. Store globally
-        units[unitCount] = unit;
-    
-        // 7. Add to station
-        station.addUnit(unit);
-    
-        // 8. Increase counter
-        unitCount++;
-    
-        // 9. Return ID
-        return unit.getUnitId();
-    }
 
+        units[unitCount] = unit;
+        station.addUnit(unit);
+
+        unitCount++;
+
+        // 🔴 increment AFTER returning ID
+        return nextUnitId++;
+    }
     @Override
     public void decommissionUnit(int unitId)
             throws IDNotRecognisedException, IllegalStateException {
@@ -383,45 +375,26 @@ public int addStation(String name, int x, int y)
     
 
     @Override
-    public String viewUnit(int unitId) throws IDNotRecognisedException {
+    public String viewUnit(int id) throws IDNotRecognisedException {
 
-         Unit unit = null;
+        Unit unit = null;
 
         for (int i = 0; i < unitCount; i++) {
-            if (units[i].getUnitId() == unitId) {
+            if (units[i].getUnitId() == id) {
                 unit = units[i];
                 break;
             }
         }
 
         if (unit == null) {
-            throw new IDNotRecognisedException("Unit ID not recognised");
+            throw new IDNotRecognisedException("Unit not recognised");
         }
 
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("U#").append(unit.getUnitId());
-        sb.append(" TYPE=").append(unit.getType());
-        sb.append(" HOME=").append(unit.getHomeStationId());
-        sb.append(" LOC=(").append(unit.getX()).append(",").append(unit.getY()).append(")");
-        sb.append(" STATUS=").append(unit.getStatus());
-
-        // Incident field
-        if (unit.getIncidentId() == -1) {
-            sb.append(" INCIDENT=-");
-        } else {
-            sb.append(" INCIDENT=").append(unit.getIncidentId());
-        }
-
-        // WORK field only if AT_SCENE
-        if (unit.getStatus() == UnitStatus.AT_SCENE) {
-            sb.append(" WORK=").append(unit.getWorkRemaining());
-        }
-
-        return sb.toString();
+        return "U#" + unit.getUnitId()
+        + " TYPE=" + unit.getType()
+        + " LOC=(" + unit.getX() + "," + unit.getY() + ")"
+        + " STATUS=" + unit.getStatus();
     }
-
-
     @Override
     public int reportIncident(IncidentType type, int severity, int x, int y)
             throws InvalidSeverityException, InvalidLocationException {
@@ -453,7 +426,7 @@ public int addStation(String name, int x, int y)
     }
 
    @Override
-public void cancelIncident(int incidentId)
+    public void cancelIncident(int incidentId)
         throws IDNotRecognisedException, IllegalStateException {
 
     Incident incident = null;
@@ -532,84 +505,134 @@ public void cancelIncident(int incidentId)
     }
 
     @Override
-    public String viewIncident(int incidentId) throws IDNotRecognisedException {
+    public String viewIncident(int id) throws IDNotRecognisedException {
 
         Incident incident = null;
 
         for (int i = 0; i < incidentCount; i++) {
-            if (incidents[i].getIncidentId() == incidentId) {
+            if (incidents[i].getIncidentId() == id) {
                 incident = incidents[i];
                 break;
             }
         }
 
         if (incident == null) {
-            throw new IDNotRecognisedException("Incident ID not recognised");
+            throw new IDNotRecognisedException("Incident not recognised");
         }
 
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("I#").append(incident.getIncidentId());
-        sb.append(" TYPE=").append(incident.getType());
-        sb.append(" SEV=").append(incident.getSeverity());
-        sb.append(" LOC=(").append(incident.getX()).append(",").append(incident.getY()).append(")");
-        sb.append(" STATUS=").append(incident.getStatus());
-
-        if (incident.getUnitId() == -1) {
-            sb.append(" UNIT=-");
+        String unitPart = "UNIT=";
+        if (incident.getAssignedUnit() != null) {
+            unitPart += incident.getAssignedUnit().getUnitId();
         } else {
-            sb.append(" UNIT=").append(incident.getUnitId());
+            unitPart += "NONE";
         }
 
-        return sb.toString();
+        return "I#" + incident.getIncidentId()
+                + " TYPE=" + incident.getType()
+                + " STATUS=" + incident.getStatus()
+                + " X=" + incident.getX()
+                + " Y=" + incident.getY()
+                + " " + unitPart;
     }
 
     @Override
     public void dispatch() {
 
-    // Loop through all incidents
         for (int i = 0; i < incidentCount; i++) {
 
             Incident incident = incidents[i];
 
-            // Only dispatch REPORTED incidents
-            if (incident.getStatus() == IncidentStatus.REPORTED) {
+            if (incident.getStatus() != IncidentStatus.REPORTED) {
+                continue;
+            }
 
-                // Try to find a suitable unit
-                for (int j = 0; j < unitCount; j++) {
+            Unit bestUnit = null;
+            int bestDistance = Integer.MAX_VALUE;
 
-                    Unit unit = units[j];
+            for (int j = 0; j < unitCount; j++) {
 
-                    // Unit must be IDLE and able to handle the incident
-                    if (unit.getStatus() == UnitStatus.IDLE &&
-                        unit.canHandle(incident.getType())) {
+                Unit unit = units[j];
 
-                        // Assign unit to incident
-                        incident.setAssignedUnit(unit);
-                        unit.assignIncident(incident);
+                // Eligible = NOT busy, NOT out of service, correct type
+                if (unit.getStatus() != UnitStatus.BUSY
+                        && unit.getStatus() != UnitStatus.OUT_OF_SERVICE
+                        && unit.canHandle(incident.getType())) {
 
-                        // Update statuses
-                        incident.setStatus(IncidentStatus.DISPATCHED);
-                        unit.setStatus(UnitStatus.BUSY);
+                    int distance = Math.abs(unit.getX() - incident.getX())
+                            + Math.abs(unit.getY() - incident.getY());
 
-                        // Set work ticks
-                        int ticks = unit.getTicksToResolve(incident.getSeverity());
-                        unit.setWorkTicksRemaining(ticks);
+                    if (bestUnit == null
+                            || distance < bestDistance
+                            || (distance == bestDistance
+                                && unit.getUnitId() < bestUnit.getUnitId())) {
 
-                        // Stop searching once assigned
-                        break;
+                        bestUnit = unit;
+                        bestDistance = distance;
                     }
+                }
+            }
+
+            if (bestUnit != null) {
+
+                incident.setAssignedUnit(bestUnit);
+                incident.setStatus(IncidentStatus.DISPATCHED);
+
+                bestUnit.assignIncident(incident);
+                bestUnit.setStatus(UnitStatus.BUSY);
+            }
+        }
+    }
+    @Override
+    public void tick() {
+
+        tick++;  // increase simulation time
+
+        for (int i = 0; i < unitCount; i++) {
+
+            Unit unit = units[i];
+
+            // Only process units that are assigned to an incident
+            if (unit.getAssignedIncident() != null) {
+
+                Incident incident = unit.getAssignedIncident();
+
+                int ux = unit.getX();
+                int uy = unit.getY();
+                int ix = incident.getX();
+                int iy = incident.getY();
+
+                // If not yet at incident location → move one step
+                if (ux != ix || uy != iy) {
+
+                    int newX = ux;
+                    int newY = uy;
+
+                    // Move in X direction first
+                    if (ux < ix) {
+                        newX++;
+                    } else if (ux > ix) {
+                        newX--;
+                    }
+                    // Only move in Y once X matches
+                    else if (uy < iy) {
+                        newY++;
+                    } else if (uy > iy) {
+                        newY--;
+                    }
+
+                    unit.setLocation(newX, newY);
+
+                } else {
+
+                    // Already at location → resolve incident
+                    incident.setStatus(IncidentStatus.RESOLVED);
+
+                    unit.setStatus(UnitStatus.IDLE);
+                    unit.clearIncident();
                 }
             }
         }
     }
-
-
-    @Override
-    public void tick() {
-        tick++;
-    }
-
     @Override
     public String getStatus() {
 
